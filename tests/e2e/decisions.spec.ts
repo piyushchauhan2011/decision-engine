@@ -16,6 +16,7 @@ test("SSR and navigation render the same selected treatment without hydration er
   await expect(page.locator(".image-card")).toHaveCount(6);
   await expect(page.locator(".hotel-card")).toHaveCount(3);
   await expect(page.locator(".offers")).toHaveCount(0);
+  await expect(page.locator("main > section")).toHaveClass([/hero/, /places/, /featured/]);
   await page.getByRole("button", { name: "Decision inspector", exact: true }).click();
   await page.locator(".inspector-decisions summary").click();
 
@@ -37,6 +38,12 @@ test("SSR and navigation render the same selected treatment without hydration er
   await expect(page.getByLabel("Visitor country")).toHaveValue("IN");
   await page.getByLabel("Seasonal offers flag").selectOption("on");
   await expect(page.locator(".offers")).toBeVisible();
+  await expect(page.locator("main > section")).toHaveClass([
+    /hero/,
+    /places/,
+    /featured/,
+    /offers/,
+  ]);
   await expect(page.locator(".decision-list")).toContainText("rule: india-seasonal-offers");
   await page.getByLabel("Seasonal offers flag").selectOption("off");
   await expect(page.locator(".offers")).toHaveCount(0);

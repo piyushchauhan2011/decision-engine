@@ -1,10 +1,8 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { getDestinations } from "../catalog.functions";
-import { DecisionProvider } from "../decisions/DecisionStore";
-import { Inspector } from "../inspector/Inspector";
 import { getPageDecisions } from "../page.functions";
-import { DestinationGrid } from "../pages/destinations/cards";
-import { PlanningPrompt } from "../pages/PlanningPrompt";
+import { PageRuntime } from "../pages/PageRuntime";
+import { PageZone, type PageBlock } from "../pages/blocks";
 import { inspectorSearch, validatePageSearch } from "../search";
 
 export const Route = createFileRoute("/destinations")({
@@ -27,39 +25,13 @@ export const Route = createFileRoute("/destinations")({
 function DestinationsRoute() {
   const { items, decisions } = Route.useLoaderData();
   const search = Route.useSearch();
+  const blocks = [
+    { id: "intro", type: "destinationIntro", props: {} },
+    { id: "results", type: "destinationResults", props: { items } },
+  ] as const satisfies readonly PageBlock[];
   return (
-    <>
-      <DecisionProvider values={decisions.values}>
-        <main className="container destination-page">
-          <header className="destination-intro">
-            <p className="eyebrow">FIELD GUIDES</p>
-            <h1>
-              Places worth
-              <br />
-              <em>knowing slowly.</em>
-            </h1>
-            <p>
-              Independent stays, local rituals, and considered notes for a more rewarding arrival.
-            </p>
-            <PlanningPrompt
-              brief="Choose one place to focus."
-              expanded="Select a card to narrow the collection to one destination."
-            />
-          </header>
-          {items.length > 0 ? (
-            <DestinationGrid destinations={items} />
-          ) : (
-            <div className="empty-state">
-              <h2>No destination found</h2>
-              <p>That destination is not in our collection. Browse all seven places instead.</p>
-              <Link to="/destinations" search={inspectorSearch(search)}>
-                Clear destination filter →
-              </Link>
-            </div>
-          )}
-        </main>
-      </DecisionProvider>
-      <Inspector result={decisions} search={search} />
-    </>
+    <PageRuntime decisions={decisions} search={search}>
+      <PageZone blocks={blocks} className="container destination-page" />
+    </PageRuntime>
   );
 }
