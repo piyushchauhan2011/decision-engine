@@ -34,7 +34,7 @@ Vite 8 resolves Nitro's Vite-version mismatch and the Zod pure-comment build war
 
 ## Developer tooling
 
-TypeScript 6 checks the app with `pnpm typecheck`. Oxlint checks TypeScript/JavaScript; Stylelint checks CSS against `stylelint-config-standard`; Oxfmt formats source, tests, configuration, and this README. `pnpm lint` runs both linters, and `pnpm format:check` checks formatting without writing. Generated `src/routeTree.gen.ts`, lockfile metadata, and the reference `CHATS.md` are excluded from formatting.
+TypeScript 6 checks the app with `pnpm typecheck`. `pnpm db:seed` runs the TypeScript seed script with Oxc's `oxnode` (`@oxc-node/cli`); it does not type-check the script. Oxlint checks TypeScript/JavaScript; Stylelint checks CSS against `stylelint-config-standard`; Oxfmt formats source, tests, configuration, and this README. `pnpm lint` runs both linters, and `pnpm format:check` checks formatting without writing. Generated `src/routeTree.gen.ts`, lockfile metadata, and the reference `CHATS.md` are excluded from formatting.
 
 `pnpm install` runs the Husky `prepare` script in a Git checkout. The pre-commit hook runs lint-staged: Oxfmt formats staged supported files, Oxlint checks staged TS/JS files, and Stylelint checks staged CSS. The workspace only permits native install scripts for `better-sqlite3` and `esbuild`.
 
