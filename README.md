@@ -40,6 +40,8 @@ TypeScript 6 checks the app with `pnpm typecheck`. Oxlint checks TypeScript/Java
 
 The server resolves values and assignments in loaders before HTML rendering. An HTTP-only visitor UUID cookie keeps `auto` assignments stable across requests when cookies are accepted; without cookies an assignment is request-scoped, though each response still hydrates consistently. FNV-1a over UTF-16 code units assigns <50 buckets to control. The app sets `Cache-Control: private, no-store` on personalized pages. The inspector is a local demonstration, not remote feature management, analytics or exposure tracking.
 
+The inspector is a bottom-right launcher, not an in-flow page section. Open it to filter experiments by ID; each row shows the assigned variant alongside its override. Visitor/flag controls are grouped separately, while resolved values and provenance are collapsed until requested. The panel stays inside the viewport and scrolls independently on small screens. Escape or Close returns focus to the launcher. Closing the inspector does not clear URL overrides; invalid values appear as a launcher count and in the panel.
+
 ## Cross-section extension: planning cues
 
 Use `?guide=on&exp.planning-guide-detail=control` for brief planning cues in the hero, six destination cards, three featured stays, and destination index. Switch `exp.planning-guide-detail=treatment` for more explicit next-step copy on both routes and both card layouts. `guide=off` (the default) hides every cue even when the experiment is treatment. The rule `planning-guide-flag` owns `planningGuide.visible`; the experiment `planning-guide-detail` owns `planningGuide.detail`. Their provenance appears independently in the inspector. Invalid `guide` or experiment values are listed and ignored.

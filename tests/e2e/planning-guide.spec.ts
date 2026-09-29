@@ -7,6 +7,8 @@ test("planning flag gates independent copy-density treatment across routes and c
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/?guide=on&exp.planning-guide-detail=control&exp.arrival-flow=control");
   await page.waitForLoadState("networkidle");
+  await page.getByRole("button", { name: "Decision inspector", exact: true }).click();
+  await page.locator(".inspector-decisions summary").click();
   await expect(page.locator(".hero .planning-prompt")).toHaveText(/Plan at your own pace/);
   await expect(page.locator(".destination-card .planning-prompt")).toHaveCount(6);
   await expect(page.locator(".hotel-card .planning-prompt")).toHaveCount(3);
@@ -22,6 +24,8 @@ test("planning flag gates independent copy-density treatment across routes and c
   await page.locator("#destination-select").selectOption("kyoto");
   await page.getByRole("button", { name: /Explore stays/ }).click();
   await expect(page).toHaveURL(/destination=kyoto/);
+  await page.waitForLoadState("networkidle");
+  await page.getByRole("button", { name: "Decision inspector", exact: true }).click();
   await expect(page.locator(".destination-card .planning-prompt")).toHaveCount(1);
   await expect(page.getByLabel("Planning guide flag")).toHaveValue("on");
   await expect(page.getByLabel("planning-guide-detail assignment")).toHaveValue("treatment");
@@ -36,6 +40,8 @@ test("planning flag gates independent copy-density treatment across routes and c
     .click();
   await expect(page.locator(".destination-intro .planning-prompt")).toContainText("Select a card");
   await expect(page.locator(".image-card .planning-prompt")).toHaveCount(7);
+  await page.getByRole("button", { name: "Decision inspector", exact: true }).click();
+  await page.locator(".inspector-decisions summary").click();
 
   await page.getByLabel("arrival-flow assignment").selectOption("treatment");
   await expect(page.locator(".compact-card .planning-prompt")).toHaveCount(7);
@@ -46,10 +52,13 @@ test("planning flag gates independent copy-density treatment across routes and c
   await expect(page.locator(".compact-card .planning-prompt")).toHaveCount(7);
   await page.getByRole("link", { name: /Bali Jungle hideaways/ }).click();
   await expect(page).toHaveURL(/destination=bali/);
+  await expect(page.getByRole("complementary", { name: "Decision inspector" })).toBeVisible();
   await expect(page.locator(".compact-card .planning-prompt")).toHaveCount(1);
   await expect(page.getByLabel("Planning guide flag")).toHaveValue("on");
 
   await page.goto("/destinations?destination=kyoto&guide=broken&exp.planning-guide-detail=bad");
+  await page.waitForLoadState("networkidle");
+  await page.getByRole("button", { name: /Decision inspector/ }).click();
   await expect(page.locator(".planning-prompt")).toHaveCount(0);
   await expect(page.locator(".ignored")).toContainText("guide=broken");
   await expect(page.locator(".ignored")).toContainText("exp.planning-guide-detail=bad");

@@ -16,6 +16,8 @@ test("SSR and navigation render the same selected treatment without hydration er
   await expect(page.locator(".image-card")).toHaveCount(6);
   await expect(page.locator(".hotel-card")).toHaveCount(3);
   await expect(page.locator(".offers")).toHaveCount(0);
+  await page.getByRole("button", { name: "Decision inspector", exact: true }).click();
+  await page.locator(".inspector-decisions summary").click();
 
   await page.getByLabel("arrival-flow assignment").selectOption("treatment");
   await expect(page.locator(".hero")).toHaveAttribute("data-hero-layout", "split");
@@ -49,15 +51,21 @@ test("SSR and navigation render the same selected treatment without hydration er
   await page.getByRole("button", { name: /Explore stays/ }).click();
   await expect(page).toHaveURL(/destination=kyoto/);
   await page.waitForLoadState("networkidle");
+  await page.getByRole("button", { name: "Decision inspector", exact: true }).click();
+  await page.locator(".inspector-decisions summary").click();
   await expect(page.locator(".compact-card")).toHaveCount(1);
   await expect(page.locator(".destination-grid")).toHaveAttribute("data-columns", "two");
   await expect(page.getByLabel("Visitor country")).toHaveValue("IN");
   await page.getByLabel("arrival-flow assignment").selectOption("control");
-  await expect(page.locator(".assignments")).toContainText("arrival-flow: control");
+  await expect(
+    page.locator(".inspector-experiment").filter({ hasText: "arrival-flow" }),
+  ).toContainText("Assigned: control");
   await expect(page.locator(".image-card")).toHaveCount(1);
   await expect(page).toHaveURL(/destination=kyoto/);
 
   await page.goto("/destinations?destination=not-a-place&exp.arrival-flow=invalid");
+  await page.waitForLoadState("networkidle");
+  await page.getByRole("button", { name: /Decision inspector/ }).click();
   await expect(page.getByText("No destination found")).toBeVisible();
   await expect(page.getByText(/Ignored invalid overrides/)).toContainText(
     "exp.arrival-flow=invalid",
@@ -94,9 +102,13 @@ test("cookie keeps auto assignments across reload and mobile grid fits viewport"
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
-  const assigned = await page.locator(".assignments").innerText();
+  await page.waitForLoadState("networkidle");
+  await page.getByRole("button", { name: "Decision inspector", exact: true }).click();
+  const assigned = await page.locator(".inspector-assignment").allTextContents();
   await page.reload();
-  await expect(page.locator(".assignments")).toHaveText(assigned);
+  await page.waitForLoadState("networkidle");
+  await page.getByRole("button", { name: "Decision inspector", exact: true }).click();
+  await expect(page.locator(".inspector-assignment")).toHaveText(assigned);
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
   await page
     .getByRole("navigation", { name: "Main navigation" })
