@@ -65,7 +65,7 @@ export function validateRule(value: unknown): asserts value is Rule {
   }
 }
 
-function validateContext(value: unknown): asserts value is RuleContext {
+export function validateContext(value: unknown): asserts value is RuleContext {
   const context = objectValue(value, "rule context");
   const visitor = objectValue(context.visitor, "visitor");
   const flags = objectValue(context.flags, "flags");
@@ -80,7 +80,7 @@ function validateContext(value: unknown): asserts value is RuleContext {
   }
 }
 
-function evaluateValidatedRule(rule: Rule, context: RuleContext): boolean {
+export function evaluateValidatedRule(rule: Rule, context: RuleContext): boolean {
   switch (rule.type) {
     case "all":
       return rule.rules.every((child) => evaluateValidatedRule(child, context));

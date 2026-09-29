@@ -1,4 +1,5 @@
-export { assignVariant, bucketForExperiment, fnv1a32 } from "./bucketing";
+export { assignVariant, bucketForExperiment, bucketForSurface, fnv1a32 } from "./bucketing";
+export { assignPageExperiments } from "./allocate";
 export {
   createDecisionRegistry,
   decisionRegistry,
@@ -18,6 +19,8 @@ export {
 } from "./rules";
 export {
   decisionDefaults,
+  decisionPagePaths,
+  type DecisionPage,
   type DecisionPath,
   type DecisionProvenance,
   type DecisionResult,

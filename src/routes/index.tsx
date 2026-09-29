@@ -29,7 +29,7 @@ export const Route = createFileRoute("/")({
   loader: async ({ deps }) => {
     const [catalog, decisions] = await Promise.all([
       getHomeCatalog(),
-      getPageDecisions({ data: deps }),
+      getPageDecisions({ data: { page: "home", ...deps } }),
     ]);
     return { catalog, decisions };
   },

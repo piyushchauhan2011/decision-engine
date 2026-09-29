@@ -6,7 +6,7 @@ import {
   createRootRoute,
   useLocation,
 } from "@tanstack/react-router";
-import { validatePageSearch } from "../search";
+import { inspectorOverrides, validatePageSearch } from "../search";
 import "../styles.css";
 
 export const Route = createRootRoute({
@@ -22,7 +22,7 @@ export const Route = createRootRoute({
       },
     ],
   }),
-  headers: () => ({ "Cache-Control": "private, no-store" }),
+  headers: () => ({ "Cache-Control": "private, no-cache" }),
   component: RootDocument,
   notFoundComponent: () => (
     <main className="container not-found">
@@ -34,14 +34,7 @@ export const Route = createRootRoute({
 
 function RootDocument() {
   const search = validatePageSearch(useLocation({ select: (location) => location.search }));
-  const overrides = {
-    country: search.country,
-    offers: search.offers,
-    guide: search.guide,
-    "exp.arrival-flow": search["exp.arrival-flow"],
-    "exp.destination-density": search["exp.destination-density"],
-    "exp.planning-guide-detail": search["exp.planning-guide-detail"],
-  };
+  const overrides = inspectorOverrides(search);
   return (
     <html lang="en">
       <head>

@@ -81,7 +81,7 @@ export function Inspector({ result, search }: InspectorProps) {
           <VisitorControls search={search} update={update} />
           {ignoredCount > 0 && (
             <p role="status" className="ignored">
-              Ignored invalid overrides:{" "}
+              Ignored overrides:{" "}
               {Object.entries(result.ignored)
                 .map(([key, value]) => `${key}=${value}`)
                 .join(", ")}
@@ -139,7 +139,11 @@ function ExperimentControls({
           <label className="inspector-experiment" key={id}>
             <span className="inspector-experiment-heading">
               <span>{id}</span>
-              <span className="inspector-assignment">Assigned: {result.assignments[id]}</span>
+              <span className="inspector-assignment">
+                {result.assignments[id] === undefined
+                  ? "Not assigned on this page"
+                  : `Assigned: ${result.assignments[id]}`}
+              </span>
             </span>
             <select
               aria-label={`${id} assignment`}

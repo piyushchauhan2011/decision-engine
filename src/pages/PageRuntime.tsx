@@ -16,7 +16,7 @@ export function PageRuntime({
   return (
     <>
       <DecisionProvider values={decisions.values}>{children}</DecisionProvider>
-      <Inspector result={decisions} search={search} />
+      {import.meta.env.DEV && <Inspector result={decisions} search={search} />}
     </>
   );
 }
