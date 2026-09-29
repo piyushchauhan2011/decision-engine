@@ -226,7 +226,7 @@ em {
 }
 
 .hero-split .eyebrow {
-  color: #536f57;
+  color: #405d45;
 }
 
 .hero-split h1 {
@@ -820,12 +820,16 @@ em {
   .hero-split .hero-visual {
     inset: 0;
     background:
-      linear-gradient(0deg, #20392cd9, #20392c44),
+      linear-gradient(90deg, rgb(20 36 32 / 88%), rgb(20 36 32 / 78%) 70%, rgb(20 36 32 / 60%)),
       url("/image/800/hero-1280.webp") center/cover;
   }
 
   .hero-split {
     color: white;
+  }
+
+  .hero-split .eyebrow {
+    color: #f4e3c7;
   }
 
   .hero-split .planning-prompt {

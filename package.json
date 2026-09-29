@@ -26,6 +26,7 @@
     "better-sqlite3": "^12.2.0",
     "drizzle-orm": "^0.45.0",
     "es-toolkit": "^1.52.0",
+    "h3-compression": "^1.1.0",
     "ipx": "^3.1.1",
     "neverthrow": "^8.2.0",
     "nitro": "3.0.260903-beta",
