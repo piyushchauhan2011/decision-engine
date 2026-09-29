@@ -4,7 +4,7 @@ TanStack Start SSR demo with a SQLite/Drizzle catalog and pure, pre-render decis
 
 ## Run
 
-Requires Node.js and pnpm. From this directory:
+Requires Node.js 20.19.x or >=22.12 (Vite 8) and pnpm. From this directory:
 
 ```sh
 pnpm install
@@ -28,7 +28,9 @@ pnpm exec playwright install chromium  # only if Chromium is not installed
 pnpm test:e2e                    # expects a pre-seeded local.db
 ```
 
-`pnpm start` serves the Nitro Node build from `.output/server/index.mjs`; set `PORT` to change its port. Native `better-sqlite3` must be built for the server's OS/architecture. The Playwright config starts a dev server if port 3000 is free and otherwise reuses one.
+`pnpm start` serves the Nitro Node build from `.output/server/index.mjs`; set `PORT` to change its port. Native `better-sqlite3` must be built for the server's OS/architecture. Playwright starts its own dev server on port 3100 and fails on conflicts rather than reusing an unrelated server.
+
+Vite 8 resolves Nitro's Vite-version mismatch and the Zod pure-comment build warnings. Nitro's generated code-splitting group still reports a missing timing `debugName`, and the Node bundle reports TanStack Router's `"use client"` directives; these originate in dependencies, not application source. They remain visible rather than being filtered. The build and production SSR are verified with those diagnostics present.
 
 ## Developer tooling
 
