@@ -1,4 +1,5 @@
 import { useLocation } from "@tanstack/react-router";
+import { pickBy } from "es-toolkit/object";
 import { z } from "zod";
 
 export const searchSchema = z.object({
@@ -24,9 +25,7 @@ export type InspectorSearch = Pick<
 
 export function validatePageSearch(input: unknown): PageSearch {
   const source = input && typeof input === "object" ? (input as Record<string, unknown>) : {};
-  const strings = Object.fromEntries(
-    Object.entries(source).filter(([, value]) => typeof value === "string"),
-  );
+  const strings = pickBy(source, (value) => typeof value === "string");
   return searchSchema.parse(strings);
 }
 
@@ -46,10 +45,6 @@ export function inspectorSearch(search: PageSearch): InspectorSearch {
   };
 }
 
-export function inspectorOverrides(search: PageSearch): Record<string, string> {
-  return Object.fromEntries(
-    Object.entries(inspectorSearch(search)).filter(
-      (entry): entry is [string, string] => typeof entry[1] === "string",
-    ),
-  );
+export function inspectorOverrides(search: PageSearch): InspectorSearch {
+  return pickBy(inspectorSearch(search), (value) => typeof value === "string");
 }
