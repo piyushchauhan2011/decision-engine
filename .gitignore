@@ -1,0 +1,8 @@
+node_modules/
+.output/
+dist/
+.tanstack/
+local.db
+local.db-*
+test-results/
+playwright-report/

@@ -1,0 +1,5 @@
+{
+  "*.{js,jsx,ts,tsx,mjs,cjs,json,md,css}": "oxfmt --write",
+  "*.{js,jsx,ts,tsx,mjs,cjs}": "oxlint --ignore-pattern src/routeTree.gen.ts",
+  "*.css": "stylelint"
+}

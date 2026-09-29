@@ -1,0 +1,51 @@
+{
+  "name": "hotel-page-decisions-demo",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite dev",
+    "lint": "oxlint --ignore-pattern src/routeTree.gen.ts src scripts tests *.ts *.mjs && pnpm lint:css",
+    "lint:css": "stylelint \"src/**/*.css\"",
+    "format": "oxfmt --write src scripts tests *.ts *.mjs *.json README.md",
+    "format:check": "oxfmt --check src scripts tests *.ts *.mjs *.json README.md",
+    "prepare": "husky",
+    "typecheck": "tsc --noEmit",
+    "build": "vite build",
+    "start": "node .output/server/index.mjs",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:seed": "tsx scripts/seed.ts",
+    "db:setup": "pnpm db:migrate && pnpm db:seed"
+  },
+  "dependencies": {
+    "@tanstack/react-router": "^1.166.0",
+    "@tanstack/react-start": "^1.166.0",
+    "better-sqlite3": "^12.2.0",
+    "drizzle-orm": "^0.45.0",
+    "nitro": "3.0.260903-beta",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "zod": "^4.3.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.58.0",
+    "@types/better-sqlite3": "^7.6.0",
+    "@types/node": "^25.0.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^5.1.0",
+    "drizzle-kit": "^0.31.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.0",
+    "oxfmt": "^0.70.0",
+    "oxlint": "^1.85.0",
+    "stylelint": "^17.15.0",
+    "stylelint-config-standard": "^40.0.0",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.3",
+    "vite": "^7.3.0",
+    "vitest": "^4.0.0"
+  }
+}
