@@ -40,6 +40,8 @@ TypeScript 6 checks the app with `pnpm typecheck`. Oxlint checks TypeScript/Java
 
 The server resolves values and assignments in loaders before HTML rendering. An HTTP-only visitor UUID cookie keeps `auto` assignments stable across requests when cookies are accepted; without cookies an assignment is request-scoped, though each response still hydrates consistently. FNV-1a over UTF-16 code units assigns <50 buckets to control. The app sets `Cache-Control: private, no-store` on personalized pages. The inspector is a local demonstration, not remote feature management, analytics or exposure tracking.
 
+Page routes pass loader-resolved decisions into a route-scoped Zustand `DecisionProvider`; sections read only the paths they render with `useDecision(path)`. The store is constructed per loader snapshot, not as a module-global singleton, so server requests cannot share a visitor's decisions and navigation replaces the snapshot. Search and overrides remain owned by TanStack Router's URL (read via `usePageSearch`), not copied into Zustand; links and forms preserve them. The inspector still receives assignments and provenance directly from the loader.
+
 The inspector is a bottom-right launcher, not an in-flow page section. Open it to filter experiments by ID; each row shows the assigned variant alongside its override. Visitor/flag controls are grouped separately, while resolved values and provenance are collapsed until requested. The panel stays inside the viewport and scrolls independently on small screens. Escape or Close returns focus to the launcher. Closing the inspector does not clear URL overrides; invalid values appear as a launcher count and in the panel.
 
 ## Cross-section extension: planning cues

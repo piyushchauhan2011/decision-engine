@@ -58,3 +58,30 @@ test("floating inspector filters experiments, exposes provenance, and restores f
   await expect(page.locator(".destination-intro .planning-prompt")).toBeVisible();
   await expect(launcher).toHaveAttribute("aria-expanded", "false");
 });
+
+test("server decisions stay isolated between visitors and refresh from URL navigation", async ({
+  browser,
+}) => {
+  const firstContext = await browser.newContext();
+  const secondContext = await browser.newContext();
+  try {
+    const first = await firstContext.newPage();
+    const second = await secondContext.newPage();
+    await first.goto("/?exp.arrival-flow=treatment");
+    await second.goto("/?exp.arrival-flow=control");
+    await expect(first.locator(".hero")).toHaveAttribute("data-hero-layout", "split");
+    await expect(second.locator(".hero")).toHaveAttribute("data-hero-layout", "immersive");
+
+    await first.getByRole("button", { name: "Decision inspector", exact: true }).click();
+    await first.getByLabel("arrival-flow assignment").selectOption("control");
+    await expect(first.locator(".hero")).toHaveAttribute("data-hero-layout", "immersive");
+    await expect(second.locator(".hero")).toHaveAttribute("data-hero-layout", "immersive");
+    await second.getByRole("button", { name: "Decision inspector", exact: true }).click();
+    await second.getByLabel("arrival-flow assignment").selectOption("treatment");
+    await expect(second.locator(".hero")).toHaveAttribute("data-hero-layout", "split");
+    await expect(first.locator(".hero")).toHaveAttribute("data-hero-layout", "immersive");
+  } finally {
+    await firstContext.close();
+    await secondContext.close();
+  }
+});

@@ -1,23 +1,16 @@
 import { Link } from "@tanstack/react-router";
 import type { Destination, Hotel } from "../../db/catalog.server";
-import type { DecisionValues } from "../../decisions";
-import { inspectorSearch, inspectorOverrides, type PageSearch } from "../../search";
+import { useDecision } from "../../decisions/DecisionStore";
+import { inspectorSearch, inspectorOverrides, usePageSearch } from "../../search";
 import { DestinationGrid } from "../destinations/cards";
 import { PlanningPrompt } from "../PlanningPrompt";
 
 type HomeProps = {
   catalog: { destinations: Destination[]; hotels: Hotel[] };
-  values: DecisionValues;
-  search: PageSearch;
 };
 
-function DestinationSearch({
-  destinations,
-  search,
-}: {
-  destinations: Destination[];
-  search: PageSearch;
-}) {
+function DestinationSearch({ destinations }: { destinations: Destination[] }) {
+  const search = usePageSearch();
   return (
     <form className="destination-search" action="/destinations" method="get">
       <label htmlFor="destination-select">Find your next place</label>
@@ -43,12 +36,14 @@ function DestinationSearch({
   );
 }
 
-function Hero({ catalog, values, search }: HomeProps) {
+function Hero({ catalog }: HomeProps) {
+  const heroLayout = useDecision("hero.layout");
+  const searchLayout = useDecision("search.layout");
   return (
     <section
-      className={`hero hero-${values["hero.layout"]} search-${values["search.layout"]}`}
-      data-hero-layout={values["hero.layout"]}
-      data-search-layout={values["search.layout"]}
+      className={`hero hero-${heroLayout} search-${searchLayout}`}
+      data-hero-layout={heroLayout}
+      data-search-layout={searchLayout}
     >
       <div className="hero-visual" role="presentation" />
       <div className="container hero-content">
@@ -60,34 +55,22 @@ function Hero({ catalog, values, search }: HomeProps) {
         </h1>
         <p>Independent hotels and slower journeys, selected with care.</p>
         <PlanningPrompt
-          values={values}
           brief="Plan at your own pace."
           expanded="Choose a destination to narrow the collection before exploring."
         />
-        {values["search.layout"] === "inline" && (
-          <DestinationSearch destinations={catalog.destinations} search={search} />
-        )}
+        {searchLayout === "inline" && <DestinationSearch destinations={catalog.destinations} />}
       </div>
-      {values["search.layout"] === "overlay" && (
+      {searchLayout === "overlay" && (
         <div className="container hero-search">
-          <DestinationSearch destinations={catalog.destinations} search={search} />
+          <DestinationSearch destinations={catalog.destinations} />
         </div>
       )}
     </section>
   );
 }
 
-function FeaturedStays({
-  hotels,
-  destinations,
-  search,
-  values,
-}: {
-  hotels: Hotel[];
-  destinations: Destination[];
-  search: PageSearch;
-  values: DecisionValues;
-}) {
+function FeaturedStays({ hotels, destinations }: { hotels: Hotel[]; destinations: Destination[] }) {
+  const search = usePageSearch();
   return (
     <section className="section featured">
       <div className="container">
@@ -121,7 +104,6 @@ function FeaturedStays({
                   <h3>{hotel.name}</h3>
                   <p>{hotel.summary}</p>
                   <PlanningPrompt
-                    values={values}
                     brief="Explore this destination."
                     expanded="Open this stay's destination to focus on one place."
                   />
@@ -157,10 +139,12 @@ function SeasonalOffers() {
   );
 }
 
-export function HomePage({ catalog, values, search }: HomeProps) {
+export function HomePage({ catalog }: HomeProps) {
+  const search = usePageSearch();
+  const offersVisible = useDecision("offers.visible");
   return (
     <main>
-      <Hero catalog={catalog} values={values} search={search} />
+      <Hero catalog={catalog} />
       <section className="section places">
         <div className="container">
           <div className="section-heading">
@@ -172,22 +156,11 @@ export function HomePage({ catalog, values, search }: HomeProps) {
               All destinations →
             </Link>
           </div>
-          <DestinationGrid
-            destinations={catalog.destinations}
-            layout={values["destinationCard.layout"]}
-            columns={values["destinations.columns"]}
-            values={values}
-            search={inspectorSearch(search)}
-          />
+          <DestinationGrid destinations={catalog.destinations} />
         </div>
       </section>
-      <FeaturedStays
-        hotels={catalog.hotels}
-        destinations={catalog.destinations}
-        search={search}
-        values={values}
-      />
-      {values["offers.visible"] && <SeasonalOffers />}
+      <FeaturedStays hotels={catalog.hotels} destinations={catalog.destinations} />
+      {offersVisible && <SeasonalOffers />}
     </main>
   );
 }

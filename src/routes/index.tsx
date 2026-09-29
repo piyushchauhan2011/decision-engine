@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { getHomeCatalog } from "../catalog.functions";
+import { DecisionProvider } from "../decisions/DecisionStore";
 import { Inspector } from "../inspector/Inspector";
 import { getPageDecisions } from "../page.functions";
 import { HomePage } from "../pages/home/HomePage";
@@ -23,7 +24,9 @@ function HomeRoute() {
   const search = Route.useSearch();
   return (
     <>
-      <HomePage catalog={catalog} values={decisions.values} search={search} />
+      <DecisionProvider values={decisions.values}>
+        <HomePage catalog={catalog} />
+      </DecisionProvider>
       <Inspector result={decisions} search={search} />
     </>
   );

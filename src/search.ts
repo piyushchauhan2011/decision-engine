@@ -1,3 +1,4 @@
+import { useLocation } from "@tanstack/react-router";
 import { z } from "zod";
 
 export const searchSchema = z.object({
@@ -27,6 +28,11 @@ export function validatePageSearch(input: unknown): PageSearch {
     Object.entries(source).filter(([, value]) => typeof value === "string"),
   );
   return searchSchema.parse(strings);
+}
+
+export function usePageSearch(): PageSearch {
+  const search = useLocation({ select: (location) => location.search });
+  return validatePageSearch(search);
 }
 
 export function inspectorSearch(search: PageSearch): InspectorSearch {

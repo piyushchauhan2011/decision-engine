@@ -1,17 +1,18 @@
-import type { DecisionValues } from "../decisions";
+import { useDecision } from "../decisions/DecisionStore";
 
 type PlanningPromptProps = {
-  values: Pick<DecisionValues, "planningGuide.visible" | "planningGuide.detail">;
   brief: string;
   expanded: string;
 };
 
-export function PlanningPrompt({ values, brief, expanded }: PlanningPromptProps) {
-  if (!values["planningGuide.visible"]) return null;
+export function PlanningPrompt({ brief, expanded }: PlanningPromptProps) {
+  const visible = useDecision("planningGuide.visible");
+  const detail = useDecision("planningGuide.detail");
+  if (!visible) return null;
   return (
-    <span className={`planning-prompt planning-prompt-${values["planningGuide.detail"]}`}>
+    <span className={`planning-prompt planning-prompt-${detail}`}>
       <span className="planning-prompt-label">PLAN AHEAD</span>{" "}
-      {values["planningGuide.detail"] === "expanded" ? expanded : brief}
+      {detail === "expanded" ? expanded : brief}
     </span>
   );
 }

@@ -1,14 +1,15 @@
 import { Link } from "@tanstack/react-router";
 import type { ComponentType } from "react";
 import type { Destination } from "../../db/catalog.server";
+import { useDecision } from "../../decisions/DecisionStore";
 import type { DecisionValues } from "../../decisions";
-import type { InspectorSearch } from "../../search";
+import { inspectorSearch, usePageSearch, type InspectorSearch } from "../../search";
 import { PlanningPrompt } from "../PlanningPrompt";
 
-type CardProps = { destination: Destination; search: InspectorSearch; values: DecisionValues };
+type CardProps = { destination: Destination; search: InspectorSearch };
 type CardLayout = DecisionValues["destinationCard.layout"];
 
-function ImageCard({ destination, search, values }: CardProps) {
+function ImageCard({ destination, search }: CardProps) {
   return (
     <article className="destination-card image-card">
       <Link to="/destinations" search={{ ...search, destination: destination.slug }}>
@@ -19,7 +20,6 @@ function ImageCard({ destination, search, values }: CardProps) {
           <p>{destination.summary}</p>
           <b>Explore place ↗</b>
           <PlanningPrompt
-            values={values}
             brief={`Focus on ${destination.name}.`}
             expanded={`Select ${destination.name} to filter the collection to one place.`}
           />
@@ -29,7 +29,7 @@ function ImageCard({ destination, search, values }: CardProps) {
   );
 }
 
-function CompactCard({ destination, search, values }: CardProps) {
+function CompactCard({ destination, search }: CardProps) {
   return (
     <article className="destination-card compact-card">
       <Link to="/destinations" search={{ ...search, destination: destination.slug }}>
@@ -39,7 +39,6 @@ function CompactCard({ destination, search, values }: CardProps) {
         </h3>
         <p>{destination.summary}</p>
         <PlanningPrompt
-          values={values}
           brief={`Focus on ${destination.name}.`}
           expanded={`Select ${destination.name} to filter the collection to one place.`}
         />
@@ -53,19 +52,10 @@ const cardRegistry: Record<CardLayout, ComponentType<CardProps>> = {
   compact: CompactCard,
 };
 
-export function DestinationGrid({
-  destinations,
-  layout,
-  columns,
-  search,
-  values,
-}: {
-  destinations: Destination[];
-  layout: CardLayout;
-  columns: DecisionValues["destinations.columns"];
-  search: InspectorSearch;
-  values: DecisionValues;
-}) {
+export function DestinationGrid({ destinations }: { destinations: Destination[] }) {
+  const layout = useDecision("destinationCard.layout");
+  const columns = useDecision("destinations.columns");
+  const search = inspectorSearch(usePageSearch());
   const Card = cardRegistry[layout];
   if (!Card) throw new Error(`Unknown destination card layout: ${layout}`);
   return (
@@ -75,7 +65,7 @@ export function DestinationGrid({
       data-columns={columns}
     >
       {destinations.map((destination) => (
-        <Card key={destination.id} destination={destination} search={search} values={values} />
+        <Card key={destination.id} destination={destination} search={search} />
       ))}
     </div>
   );
