@@ -9,6 +9,25 @@ export interface DecisionValues {
 }
 
 export type DecisionPath = keyof DecisionValues;
+export type DecisionPage = "home" | "destinations";
+
+export const decisionPagePaths: Record<DecisionPage, readonly DecisionPath[]> = {
+  home: [
+    "hero.layout",
+    "search.layout",
+    "destinationCard.layout",
+    "destinations.columns",
+    "offers.visible",
+    "planningGuide.visible",
+    "planningGuide.detail",
+  ],
+  destinations: [
+    "destinationCard.layout",
+    "destinations.columns",
+    "planningGuide.visible",
+    "planningGuide.detail",
+  ],
+};
 
 export const decisionDefaults: Readonly<DecisionValues> = {
   "hero.layout": "immersive",

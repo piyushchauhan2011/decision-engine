@@ -74,9 +74,7 @@ test("SSR and navigation render the same selected treatment without hydration er
   await page.waitForLoadState("networkidle");
   await page.getByRole("button", { name: /Decision inspector/ }).click();
   await expect(page.getByText("No destination found")).toBeVisible();
-  await expect(page.getByText(/Ignored invalid overrides/)).toContainText(
-    "exp.arrival-flow=invalid",
-  );
+  await expect(page.getByText(/Ignored overrides/)).toContainText("exp.arrival-flow=invalid");
   await page.getByRole("link", { name: /Clear destination filter/ }).click();
   await expect(page.locator(".destination-card")).toHaveCount(7);
   await page

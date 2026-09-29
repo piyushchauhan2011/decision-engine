@@ -10,7 +10,7 @@ export default defineConfig({
       server: { build: { inlineCss: true } },
     }),
     nitro({
-      plugins: ["./src/server/compression.ts"],
+      plugins: ["./src/server/decision-config.ts", "./src/server/compression.ts"],
       compressPublicAssets: { gzip: true, brotli: true },
       routeRules: {
         "/assets/**": { headers: { "cache-control": "public, max-age=31536000, immutable" } },

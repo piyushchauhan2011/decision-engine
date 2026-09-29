@@ -15,7 +15,7 @@ export const Route = createFileRoute("/destinations")({
       deps.destination && !destination
         ? Promise.resolve([])
         : getDestinations({ data: { destination } }),
-      getPageDecisions({ data: inspectorSearch(deps) }),
+      getPageDecisions({ data: { page: "destinations", ...inspectorSearch(deps) } }),
     ]);
     return { items, decisions };
   },

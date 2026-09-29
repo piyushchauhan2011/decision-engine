@@ -12,6 +12,9 @@ export function fnv1a32(input: string): number {
 export function bucketForExperiment(visitorId: string, experimentId: string): number {
   return fnv1a32(`${visitorId}:${experimentId}`) % 100;
 }
+export function bucketForSurface(visitorId: string, surface: string): number {
+  return fnv1a32(`${visitorId}:surface:${surface}`) % 10000;
+}
 
 export function assignVariant(visitorId: string, experimentId: string): Variant {
   return bucketForExperiment(visitorId, experimentId) < 50 ? "control" : "treatment";
