@@ -28,6 +28,14 @@ export const experiments = [
       treatment: { "destinations.columns": "two" },
     },
   },
+  {
+    id: "planning-guide-detail",
+    owns: ["planningGuide.detail"],
+    variants: {
+      control: {},
+      treatment: { "planningGuide.detail": "expanded" },
+    },
+  },
 ] as const satisfies readonly Experiment[];
 
 export type ExperimentId = (typeof experiments)[number]["id"];
@@ -63,6 +71,12 @@ function checkPatch(owner: string, owns: ReadonlySet<DecisionPath>, patch: unkno
         throw new Error(`Invalid value for ${path} in ${owner}`);
       case "offers.visible":
         if (typeof value === "boolean") break;
+        throw new Error(`Invalid value for ${path} in ${owner}`);
+      case "planningGuide.visible":
+        if (typeof value === "boolean") break;
+        throw new Error(`Invalid value for ${path} in ${owner}`);
+      case "planningGuide.detail":
+        if (value === "brief" || value === "expanded") break;
         throw new Error(`Invalid value for ${path} in ${owner}`);
     }
   }

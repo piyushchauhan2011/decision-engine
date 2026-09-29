@@ -6,8 +6,10 @@ import { assignVariant, experiments, resolveDecisions } from "./decisions";
 const overridesSchema = z.object({
   country: z.string().optional(),
   offers: z.string().optional(),
+  guide: z.string().optional(),
   "exp.arrival-flow": z.string().optional(),
   "exp.destination-density": z.string().optional(),
+  "exp.planning-guide-detail": z.string().optional(),
 });
 
 export const getPageDecisions = createServerFn({ method: "GET" })
@@ -32,6 +34,9 @@ export const getPageDecisions = createServerFn({ method: "GET" })
     const offers = data.offers === "on" ? true : false;
     if (data.offers !== undefined && data.offers !== "on" && data.offers !== "off")
       ignored.offers = data.offers;
+    const guide = data.guide === "on";
+    if (data.guide !== undefined && data.guide !== "on" && data.guide !== "off")
+      ignored.guide = data.guide;
     const assignments: Record<string, "control" | "treatment"> = {};
     for (const experiment of experiments) {
       const override = data[`exp.${experiment.id}` as keyof typeof data];
@@ -49,7 +54,10 @@ export const getPageDecisions = createServerFn({ method: "GET" })
     }
     return {
       ...resolveDecisions({
-        context: { visitor: { country }, flags: { "seasonal-offers": offers } },
+        context: {
+          visitor: { country },
+          flags: { "seasonal-offers": offers, "planning-guide": guide },
+        },
         assignments,
       }),
       ignored,

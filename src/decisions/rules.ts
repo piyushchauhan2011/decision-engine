@@ -5,7 +5,7 @@ export type Rule =
   | { type: "any"; rules: readonly Rule[] }
   | { type: "not"; rule: Rule }
   | { type: "eq"; field: "visitor.country"; value: "IN" | "US" }
-  | { type: "flag"; name: "seasonal-offers" };
+  | { type: "flag"; name: keyof RuleContext["flags"] };
 
 export interface RuleEffect {
   id: string;
@@ -48,7 +48,7 @@ export function validateRule(value: unknown): asserts value is Rule {
       }
       return;
     case "flag":
-      if (node.name !== "seasonal-offers") {
+      if (node.name !== "seasonal-offers" && node.name !== "planning-guide") {
         throw new Error(`Unknown rule flag: ${String(node.name)}`);
       }
       return;
@@ -67,6 +67,9 @@ function validateContext(value: unknown): asserts value is RuleContext {
   if (typeof flags["seasonal-offers"] !== "boolean") {
     throw new Error("Invalid seasonal-offers flag: expected boolean");
   }
+  if (typeof flags["planning-guide"] !== "boolean") {
+    throw new Error("Invalid planning-guide flag: expected boolean");
+  }
 }
 
 function evaluateValidatedRule(rule: Rule, context: RuleContext): boolean {
@@ -80,7 +83,7 @@ function evaluateValidatedRule(rule: Rule, context: RuleContext): boolean {
     case "eq":
       return ruleOperators.eq(context.visitor.country, rule.value);
     case "flag":
-      return context.flags["seasonal-offers"];
+      return context.flags[rule.name];
   }
 }
 
@@ -103,5 +106,11 @@ export const ruleEffects: readonly RuleEffect[] = [
       ],
     },
     patch: { "offers.visible": true },
+  },
+  {
+    id: "planning-guide-flag",
+    owns: ["planningGuide.visible"],
+    when: { type: "flag", name: "planning-guide" },
+    patch: { "planningGuide.visible": true },
   },
 ];

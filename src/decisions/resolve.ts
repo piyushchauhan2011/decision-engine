@@ -40,6 +40,8 @@ export function resolveDecisions(
     "destinationCard.layout": { source: "default" },
     "destinations.columns": { source: "default" },
     "offers.visible": { source: "default" },
+    "planningGuide.visible": { source: "default" },
+    "planningGuide.detail": { source: "default" },
   };
   const writtenBy = new Map<DecisionPath, string>();
 

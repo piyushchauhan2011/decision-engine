@@ -4,6 +4,8 @@ export interface DecisionValues {
   "destinationCard.layout": "image" | "compact";
   "destinations.columns": "three" | "two";
   "offers.visible": boolean;
+  "planningGuide.visible": boolean;
+  "planningGuide.detail": "brief" | "expanded";
 }
 
 export type DecisionPath = keyof DecisionValues;
@@ -14,11 +16,13 @@ export const decisionDefaults: Readonly<DecisionValues> = {
   "destinationCard.layout": "image",
   "destinations.columns": "three",
   "offers.visible": false,
+  "planningGuide.visible": false,
+  "planningGuide.detail": "brief",
 };
 
 export interface RuleContext {
   visitor: { country: "IN" | "US" };
-  flags: { "seasonal-offers": boolean };
+  flags: { "seasonal-offers": boolean; "planning-guide": boolean };
 }
 
 export type DecisionProvenance =

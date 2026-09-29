@@ -1,4 +1,5 @@
 import { useNavigate } from "@tanstack/react-router";
+import { experiments } from "../decisions";
 import type { DecisionResult } from "../decisions";
 import type { PageSearch } from "../search";
 
@@ -26,7 +27,7 @@ export function Inspector({ result, search }: InspectorProps) {
           exposure or metrics.
         </p>
         <div className="inspector-controls">
-          {(["arrival-flow", "destination-density"] as const).map((id) => (
+          {experiments.map(({ id }) => (
             <label key={id}>
               {id}
               <select
@@ -71,6 +72,21 @@ export function Inspector({ result, search }: InspectorProps) {
               <option value="on">On</option>
               {search.offers && !["auto", "off", "on"].includes(search.offers) && (
                 <option value={search.offers}>Invalid: {search.offers}</option>
+              )}
+            </select>
+          </label>
+          <label>
+            Planning guide flag{" "}
+            <select
+              aria-label="Planning guide flag"
+              value={search.guide ?? "auto"}
+              onChange={(event) => update("guide", event.target.value)}
+            >
+              <option value="auto">Auto (off)</option>
+              <option value="off">Off</option>
+              <option value="on">On</option>
+              {search.guide && !["auto", "off", "on"].includes(search.guide) && (
+                <option value={search.guide}>Invalid: {search.guide}</option>
               )}
             </select>
           </label>

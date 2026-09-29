@@ -448,7 +448,7 @@ em {
   margin: 20px 0;
 }
 
-.destination-intro > p:last-child {
+.destination-intro > p:last-of-type {
   font-family: Georgia, serif;
   color: #6e7b70;
   font-size: 1.15rem;
@@ -590,6 +590,45 @@ em {
   font-size: 3rem;
 }
 
+.planning-prompt {
+  display: block;
+  margin-top: 14px;
+  border-left: 2px solid #bb8d5e;
+  padding: 4px 0 4px 12px;
+  color: #7d694e;
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.8rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.planning-prompt-label {
+  margin-right: 6px;
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+}
+
+.planning-prompt-expanded {
+  max-width: 26rem;
+}
+
+.hero .planning-prompt {
+  color: #f4e3c7;
+  border-color: #f4e3c7;
+}
+
+.hero-split .planning-prompt {
+  color: #4d604b;
+  border-color: #a5704d;
+}
+
+.destination-card .planning-prompt,
+.hotel-card .planning-prompt {
+  margin-top: 15px;
+}
+
 @media (width <= 900px) {
   .header-note {
     display: none;
@@ -649,6 +688,11 @@ em {
 
   .hero-split {
     color: white;
+  }
+
+  .hero-split .planning-prompt {
+    color: #f4e3c7;
+    border-color: #f4e3c7;
   }
 
   .hero-content,

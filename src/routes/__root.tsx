@@ -32,8 +32,10 @@ function RootDocument() {
   const overrides = {
     country: search.country,
     offers: search.offers,
+    guide: search.guide,
     "exp.arrival-flow": search["exp.arrival-flow"],
     "exp.destination-density": search["exp.destination-density"],
+    "exp.planning-guide-detail": search["exp.planning-guide-detail"],
   };
   return (
     <html lang="en">

@@ -3,6 +3,7 @@ import { getDestinations } from "../catalog.functions";
 import { Inspector } from "../inspector/Inspector";
 import { getPageDecisions } from "../page.functions";
 import { DestinationGrid } from "../pages/destinations/cards";
+import { PlanningPrompt } from "../pages/PlanningPrompt";
 import { inspectorSearch, validatePageSearch } from "../search";
 
 export const Route = createFileRoute("/destinations")({
@@ -38,12 +39,18 @@ function DestinationsRoute() {
           <p>
             Independent stays, local rituals, and considered notes for a more rewarding arrival.
           </p>
+          <PlanningPrompt
+            values={decisions.values}
+            brief="Choose one place to focus."
+            expanded="Select a card to narrow the collection to one destination."
+          />
         </header>
         {items.length > 0 ? (
           <DestinationGrid
             destinations={items}
             layout={decisions.values["destinationCard.layout"]}
             columns={decisions.values["destinations.columns"]}
+            values={decisions.values}
             search={inspectorSearch(search)}
           />
         ) : (

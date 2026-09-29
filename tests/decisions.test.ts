@@ -10,8 +10,14 @@ import {
 } from "../src/decisions";
 import type { RuleContext } from "../src/decisions";
 
-const india: RuleContext = { visitor: { country: "IN" }, flags: { "seasonal-offers": true } };
-const us: RuleContext = { visitor: { country: "US" }, flags: { "seasonal-offers": true } };
+const india: RuleContext = {
+  visitor: { country: "IN" },
+  flags: { "seasonal-offers": true, "planning-guide": false },
+};
+const us: RuleContext = {
+  visitor: { country: "US" },
+  flags: { "seasonal-offers": true, "planning-guide": false },
+};
 
 describe("decisions", () => {
   it("evaluates nested rules and rejects unknown branches even when short-circuited", () => {
@@ -66,6 +72,8 @@ describe("decisions", () => {
       "destinationCard.layout": "compact",
       "destinations.columns": "two",
       "offers.visible": true,
+      "planningGuide.visible": false,
+      "planningGuide.detail": "brief",
     });
     expect(result.provenance["search.layout"]).toEqual({
       source: "experiment",
@@ -85,6 +93,41 @@ describe("decisions", () => {
     expect(nonmatch.values["offers.visible"]).toBe(false);
     expect(nonmatch.provenance["offers.visible"]).toEqual({ source: "default" });
     expect(nonmatch.provenance["hero.layout"]).toEqual({ source: "default" });
+  });
+
+  it("gates planning prompts by flag while varying detail independently of card layout", () => {
+    const context: RuleContext = {
+      visitor: { country: "US" },
+      flags: { "seasonal-offers": false, "planning-guide": true },
+    };
+    const treatment = resolveDecisions({
+      context,
+      assignments: { "planning-guide-detail": "treatment", "arrival-flow": "treatment" },
+    });
+    expect(treatment.values["planningGuide.visible"]).toBe(true);
+    expect(treatment.values["planningGuide.detail"]).toBe("expanded");
+    expect(treatment.values["destinationCard.layout"]).toBe("compact");
+    expect(treatment.provenance["planningGuide.visible"]).toEqual({
+      source: "rule",
+      id: "planning-guide-flag",
+    });
+    expect(treatment.provenance["planningGuide.detail"]).toEqual({
+      source: "experiment",
+      id: "planning-guide-detail",
+      variant: "treatment",
+    });
+    const control = resolveDecisions({
+      context,
+      assignments: { "planning-guide-detail": "control" },
+    });
+    expect(control.values["planningGuide.detail"]).toBe("brief");
+    expect(control.provenance["planningGuide.detail"]).toEqual({ source: "default" });
+    const disabled = resolveDecisions({
+      context: { ...context, flags: { ...context.flags, "planning-guide": false } },
+      assignments: { "planning-guide-detail": "treatment" },
+    });
+    expect(disabled.values["planningGuide.visible"]).toBe(false);
+    expect(disabled.values["planningGuide.detail"]).toBe("expanded");
   });
 
   it("rejects invalid assignments and overlapping declared ownership including empty controls", () => {

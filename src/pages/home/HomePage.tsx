@@ -3,6 +3,7 @@ import type { Destination, Hotel } from "../../db/catalog.server";
 import type { DecisionValues } from "../../decisions";
 import { inspectorSearch, inspectorOverrides, type PageSearch } from "../../search";
 import { DestinationGrid } from "../destinations/cards";
+import { PlanningPrompt } from "../PlanningPrompt";
 
 type HomeProps = {
   catalog: { destinations: Destination[]; hotels: Hotel[] };
@@ -58,6 +59,11 @@ function Hero({ catalog, values, search }: HomeProps) {
           <em>worth remembering.</em>
         </h1>
         <p>Independent hotels and slower journeys, selected with care.</p>
+        <PlanningPrompt
+          values={values}
+          brief="Plan at your own pace."
+          expanded="Choose a destination to narrow the collection before exploring."
+        />
         {values["search.layout"] === "inline" && (
           <DestinationSearch destinations={catalog.destinations} search={search} />
         )}
@@ -75,10 +81,12 @@ function FeaturedStays({
   hotels,
   destinations,
   search,
+  values,
 }: {
   hotels: Hotel[];
   destinations: Destination[];
   search: PageSearch;
+  values: DecisionValues;
 }) {
   return (
     <section className="section featured">
@@ -112,6 +120,11 @@ function FeaturedStays({
                   <p className="eyebrow">INDEPENDENT STAY</p>
                   <h3>{hotel.name}</h3>
                   <p>{hotel.summary}</p>
+                  <PlanningPrompt
+                    values={values}
+                    brief="Explore this destination."
+                    expanded="Open this stay's destination to focus on one place."
+                  />
                   <div className="hotel-footer">
                     <span>
                       From <strong>${hotel.priceFrom}</strong> / night
@@ -163,11 +176,17 @@ export function HomePage({ catalog, values, search }: HomeProps) {
             destinations={catalog.destinations}
             layout={values["destinationCard.layout"]}
             columns={values["destinations.columns"]}
+            values={values}
             search={inspectorSearch(search)}
           />
         </div>
       </section>
-      <FeaturedStays hotels={catalog.hotels} destinations={catalog.destinations} search={search} />
+      <FeaturedStays
+        hotels={catalog.hotels}
+        destinations={catalog.destinations}
+        search={search}
+        values={values}
+      />
       {values["offers.visible"] && <SeasonalOffers />}
     </main>
   );
