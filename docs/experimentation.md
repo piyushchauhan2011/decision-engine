@@ -1,5 +1,7 @@
 # Experimentation and inspector
 
+For an end-to-end feature that also needs data, rules, and components, start with the [feature delivery workflow](feature-workflow.md).
+
 `src/decisions/experiments.ts` declares experiments as `{ id, owns, variants: { control, treatment } }`. Variants are partial patches; the current controls are empty and preserve the defaults:
 
 | Experiment              | Owned paths                                              | Treatment                    |

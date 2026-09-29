@@ -17,3 +17,4 @@ Open <http://127.0.0.1:3000/>. Requires Node.js 20.19.x or >=22.12 and pnpm.
 - [Decision and rule engine](docs/decision-engine.md)
 - [Experiments, overrides, and inspector](docs/experimentation.md)
 - [Registries instead of experiment-specific conditionals](docs/registry-pattern.md)
+- [Feature delivery workflow: data, rules, components, and launch](docs/feature-workflow.md)
