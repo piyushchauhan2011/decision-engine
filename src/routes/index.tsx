@@ -7,7 +7,22 @@ import { inspectorSearch, validatePageSearch } from "../search";
 
 export const Route = createFileRoute("/")({
   head: () => ({
-    links: [{ rel: "preload", as: "image", href: "/images/hero-1280.webp", fetchPriority: "high" }],
+    links: [
+      {
+        rel: "preload",
+        as: "image",
+        href: "/image/1280/hero-1280.webp",
+        media: "(min-width: 651px)",
+        fetchPriority: "high",
+      },
+      {
+        rel: "preload",
+        as: "image",
+        href: "/image/800/hero-1280.webp",
+        media: "(max-width: 650px)",
+        fetchPriority: "high",
+      },
+    ],
   }),
   validateSearch: validatePageSearch,
   loaderDeps: ({ search }) => inspectorSearch(search),

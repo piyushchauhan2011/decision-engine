@@ -5,6 +5,7 @@ import { useDecision } from "../../decisions/DecisionStore";
 import type { DecisionValues } from "../../decisions";
 import { inspectorSearch, usePageSearch, type InspectorSearch } from "../../search";
 import { PlanningPrompt } from "../PlanningPrompt";
+import { imageUrl } from "../image";
 
 type CardProps = { destination: Destination; search: InspectorSearch };
 type CardLayout = DecisionValues["destinationCard.layout"];
@@ -14,7 +15,9 @@ function ImageCard({ destination, search }: CardProps) {
     <article className="destination-card image-card">
       <Link to="/destinations" search={{ ...search, destination: destination.slug }}>
         <img
-          src={destination.image}
+          src={imageUrl(destination.image, 800)}
+          srcSet={`${imageUrl(destination.image, 480)} 480w, ${imageUrl(destination.image, 800)} 800w, ${imageUrl(destination.image, 1280)} 1280w`}
+          sizes="(max-width: 650px) calc(100vw - 32px), (max-width: 900px) calc((100vw - 72px) / 2), (max-width: 1228px) calc((100vw - 96px) / 3), 600px"
           alt=""
           width="1280"
           height="720"

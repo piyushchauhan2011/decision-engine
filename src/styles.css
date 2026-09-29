@@ -127,7 +127,7 @@ em {
   inset: 0;
   background:
     linear-gradient(90deg, rgb(20 36 32 / 76%), rgb(20 36 32 / 12%)),
-    url("/images/hero-1280.webp") center 52%/cover;
+    url("/image/1280/hero-1280.webp") center 52%/cover;
 }
 
 .hero-content {
@@ -214,7 +214,7 @@ em {
 
 .hero-split .hero-visual {
   inset: 0 0 0 52%;
-  background: url("/images/hero-1280.webp") center/cover;
+  background: url("/image/1280/hero-1280.webp") center/cover;
 }
 
 .hero-split .hero-content {
@@ -821,7 +821,7 @@ em {
     inset: 0;
     background:
       linear-gradient(0deg, #20392cd9, #20392c44),
-      url("/images/hero-1280.webp") center/cover;
+      url("/image/800/hero-1280.webp") center/cover;
   }
 
   .hero-split {
