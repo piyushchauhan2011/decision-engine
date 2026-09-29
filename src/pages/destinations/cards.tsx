@@ -13,7 +13,14 @@ function ImageCard({ destination, search }: CardProps) {
   return (
     <article className="destination-card image-card">
       <Link to="/destinations" search={{ ...search, destination: destination.slug }}>
-        <img src={destination.image} alt="" width="560" height="440" loading="lazy" />
+        <img
+          src={destination.image}
+          alt=""
+          width="1280"
+          height="720"
+          loading="lazy"
+          decoding="async"
+        />
         <div className="card-copy">
           <span className="eyebrow">{destination.country}</span>
           <h3>{destination.name}</h3>

@@ -5,6 +5,15 @@ import { inspectorSearch, inspectorOverrides, usePageSearch } from "../../search
 import { DestinationGrid } from "../destinations/cards";
 import { PlanningPrompt } from "../PlanningPrompt";
 
+const hotelImageSets: Record<string, string> = {
+  "/images/hotel-garden.webp":
+    "/images/hotel-garden-480.webp 480w, /images/hotel-garden-800.webp 800w, /images/hotel-garden.webp 1280w",
+  "/images/hotel-pool.webp":
+    "/images/hotel-pool-480.webp 480w, /images/hotel-pool-800.webp 800w, /images/hotel-pool.webp 1280w",
+  "/images/hotel-terrace.webp":
+    "/images/hotel-terrace-480.webp 480w, /images/hotel-terrace-800.webp 800w, /images/hotel-terrace.webp 1280w",
+};
+
 function DestinationSearch({ destinations }: { destinations: Destination[] }) {
   const search = usePageSearch();
   return (
@@ -98,7 +107,16 @@ export function FeaturedStays({
                 }}
               >
                 <div className="hotel-image">
-                  <img src={hotel.image} alt="" width="560" height="380" loading="lazy" />
+                  <img
+                    src={hotel.image}
+                    srcSet={hotelImageSets[hotel.image]}
+                    sizes="(max-width: 650px) calc(100vw - 32px), (max-width: 900px) calc((100vw - 72px) / 2), (max-width: 1228px) calc((100vw - 96px) / 3), 377px"
+                    alt=""
+                    width="1280"
+                    height="800"
+                    loading="lazy"
+                    decoding="async"
+                  />
                   <span className="hotel-rating">★ {(hotel.rating / 10).toFixed(1)}</span>
                 </div>
                 <div className="hotel-copy">

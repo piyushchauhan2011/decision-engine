@@ -5,5 +5,14 @@ import { nitro } from "nitro/vite";
 
 export default defineConfig({
   server: { port: 3000 },
-  plugins: [tanstackStart(), nitro(), viteReact()],
+  plugins: [
+    tanstackStart(),
+    nitro({
+      routeRules: {
+        "/assets/**": { headers: { "cache-control": "public, max-age=31536000, immutable" } },
+        "/images/**": { headers: { "cache-control": "public, max-age=604800" } },
+      },
+    }),
+    viteReact(),
+  ],
 });

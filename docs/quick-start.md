@@ -39,4 +39,6 @@ pnpm test:e2e
 
 Playwright starts its own dev server on port 3100 and fails if the port is occupied. To format changed files, run `pnpm format`; `pnpm format:check` does not write. `pnpm install` installs the Git pre-commit hook (Husky/lint-staged); the hook formats supported staged files and lints staged TS/JS/CSS. `pnpm db:seed` uses `oxnode` and does not type-check the script; run `pnpm typecheck` separately.
 
+For performance audits, test `pnpm build && pnpm start` rather than the Vite dev server. Nitro serves fingerprinted `/assets/` with a one-year immutable cache and stable-name `/images/` with a seven-day cache; personalized HTML remains `private, no-store`. Production deployments should enable HTTP compression at the reverse proxy/CDN for dynamic HTML. The home route preloads its hero image; other routes do not.
+
 The app does not require the reference .NET app or its PostgreSQL database. Catalog text is seeded locally; reused illustrations are decorative, not claims about the locations depicted.

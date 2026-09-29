@@ -1,7 +1,10 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap");
-
 :root {
-  font-family: "DM Sans", sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
   color: #23352f;
   background: #f8f7f2;
   font-synthesis: none;
@@ -52,7 +55,7 @@ h3 {
 
 h1,
 h2 {
-  font-family: "Playfair Display", Georgia, serif;
+  font-family: Georgia, "Times New Roman", serif;
 }
 
 em {
@@ -105,8 +108,7 @@ em {
 
 .header-note {
   margin-left: auto;
-  color: #758078;
-  font-size: 0.7rem;
+  color: #58665d;
   text-transform: uppercase;
   letter-spacing: 0.12em;
 }
@@ -142,6 +144,7 @@ em {
   line-height: 1.04;
   letter-spacing: -0.045em;
   margin: 25px 0;
+  min-block-size: 2.08em;
 }
 
 .hero-content > p:last-of-type {
@@ -261,7 +264,7 @@ em {
 }
 
 .section-heading .eyebrow {
-  color: #a06c43;
+  color: #83552e;
 }
 
 .section-heading h2 {
@@ -313,7 +316,7 @@ em {
 .card-copy .eyebrow,
 .compact-card .eyebrow,
 .hotel-copy .eyebrow {
-  color: #a06c43;
+  color: #83552e;
 }
 
 .destination-card h3,
@@ -438,7 +441,7 @@ em {
 }
 
 .destination-intro .eyebrow {
-  color: #a06c43;
+  color: #83552e;
 }
 
 .destination-intro h1 {
@@ -533,7 +536,7 @@ em {
 
 .inspector-header h2 {
   margin: 0 0 4px;
-  font-family: "DM Sans", sans-serif;
+  font-family: inherit;
   font-size: 1rem;
   font-weight: 700;
 }
@@ -569,7 +572,7 @@ em {
 .inspector-section h3,
 .inspector-section summary {
   margin: 0 0 12px;
-  font-family: "DM Sans", sans-serif;
+  font-family: inherit;
   font-size: 0.88rem;
   font-weight: 700;
 }
@@ -731,7 +734,7 @@ em {
   border-left: 2px solid #bb8d5e;
   padding: 4px 0 4px 12px;
   color: #7d694e;
-  font-family: "DM Sans", sans-serif;
+  font-family: inherit;
   font-size: 0.8rem;
   font-style: normal;
   font-weight: 600;

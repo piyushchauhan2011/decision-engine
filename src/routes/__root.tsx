@@ -15,6 +15,11 @@ export const Route = createRootRoute({
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Elsewhere — considered stays" },
+      {
+        name: "description",
+        content:
+          "Explore thoughtfully selected destinations and independent hotels for slower journeys and stays with a sense of place.",
+      },
     ],
   }),
   headers: () => ({ "Cache-Control": "private, no-store" }),
