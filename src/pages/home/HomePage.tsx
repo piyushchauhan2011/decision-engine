@@ -1,17 +1,20 @@
 import type { Destination, Hotel } from "../../db/catalog.server";
-import { PageZone, type PageBlock } from "../blocks";
+import { useDecision } from "../../decisions/DecisionStore";
+import { FeaturedStays, Hero, HomeDestinations, SeasonalOffers } from "./sections";
 
 export function HomePage({
   catalog,
 }: {
   catalog: { destinations: Destination[]; hotels: Hotel[] };
 }) {
-  const blocks = [
-    { id: "hero", type: "hero", props: { destinations: catalog.destinations } },
-    { id: "places", type: "destinations", props: { destinations: catalog.destinations } },
-    { id: "stays", type: "stays", props: catalog },
-    { id: "offers", type: "offers", props: {}, when: "offers.visible" },
-  ] as const satisfies readonly PageBlock[];
+  const offersVisible = useDecision("offers.visible");
 
-  return <PageZone blocks={blocks} />;
+  return (
+    <main>
+      <Hero destinations={catalog.destinations} />
+      <HomeDestinations destinations={catalog.destinations} />
+      <FeaturedStays hotels={catalog.hotels} destinations={catalog.destinations} />
+      {offersVisible && <SeasonalOffers />}
+    </main>
+  );
 }

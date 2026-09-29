@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { getDestinations } from "../catalog.functions";
 import { getPageDecisions } from "../page.functions";
 import { PageRuntime } from "../pages/PageRuntime";
-import { PageZone, type PageBlock } from "../pages/blocks";
+import { DestinationIntro, DestinationResults } from "../pages/destinations/sections";
 import { inspectorSearch, validatePageSearch } from "../search";
 
 export const Route = createFileRoute("/destinations")({
@@ -25,13 +25,12 @@ export const Route = createFileRoute("/destinations")({
 function DestinationsRoute() {
   const { items, decisions } = Route.useLoaderData();
   const search = Route.useSearch();
-  const blocks = [
-    { id: "intro", type: "destinationIntro", props: {} },
-    { id: "results", type: "destinationResults", props: { items } },
-  ] as const satisfies readonly PageBlock[];
   return (
     <PageRuntime decisions={decisions} search={search}>
-      <PageZone blocks={blocks} className="container destination-page" />
+      <main className="container destination-page">
+        <DestinationIntro />
+        <DestinationResults items={items} />
+      </main>
     </PageRuntime>
   );
 }

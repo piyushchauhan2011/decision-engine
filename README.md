@@ -14,7 +14,7 @@ Open <http://127.0.0.1:3000/>. Requires Node.js 20.19.x or >=22.12 and pnpm.
 
 - [Quick start, database setup, and checks](docs/quick-start.md)
 - [Application architecture and data flow](docs/architecture.md)
-- [Compose a new page from typed blocks](docs/page-composition.md)
+- [Compose a new page with JSX](docs/page-composition.md)
 - [Decision and rule engine](docs/decision-engine.md)
 - [Experiments, overrides, and inspector](docs/experimentation.md)
 - [Registries instead of experiment-specific conditionals](docs/registry-pattern.md)
