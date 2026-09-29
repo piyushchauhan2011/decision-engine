@@ -3,7 +3,12 @@ import { z } from "zod";
 import { listDestinations, listHomeCatalog } from "./db/catalog.server";
 
 export const getHomeCatalog = createServerFn({ method: "GET" }).handler(async () => {
-  return listHomeCatalog();
+  return listHomeCatalog().match(
+    (catalog) => catalog,
+    (error) => {
+      throw error;
+    },
+  );
 });
 
 export const getDestinations = createServerFn({ method: "GET" })
@@ -16,5 +21,10 @@ export const getDestinations = createServerFn({ method: "GET" })
     }),
   )
   .handler(async ({ data }) => {
-    return listDestinations(data.destination);
+    return listDestinations(data.destination).match(
+      (destinations) => destinations,
+      (error) => {
+        throw error;
+      },
+    );
   });

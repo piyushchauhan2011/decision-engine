@@ -166,3 +166,31 @@ describe("decisions", () => {
     );
   });
 });
+
+it("rejects invalid decision patch values instead of rendering unsupported variants", () => {
+  expect(() =>
+    createDecisionRegistry(
+      [
+        {
+          id: "bad-layout",
+          owns: ["hero.layout"],
+          variants: { control: {}, treatment: { "hero.layout": "overlay" as never } },
+        },
+      ],
+      [],
+    ),
+  ).toThrow(/Invalid value for hero.layout/);
+  expect(() =>
+    createDecisionRegistry(
+      [],
+      [
+        {
+          id: "bad-flag",
+          owns: ["offers.visible"],
+          when: { type: "flag", name: "seasonal-offers" },
+          patch: { "offers.visible": "on" as never },
+        },
+      ],
+    ),
+  ).toThrow(/Invalid value for offers.visible/);
+});

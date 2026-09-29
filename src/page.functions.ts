@@ -12,6 +12,48 @@ const overridesSchema = z.object({
   "exp.planning-guide-detail": z.string().optional(),
 });
 
+type Overrides = z.infer<typeof overridesSchema>;
+type IgnoredOverrides = Record<string, string>;
+
+function parseCountry(value: string | undefined, ignored: IgnoredOverrides): "IN" | "US" {
+  if (value === "IN" || value === "US") return value;
+  if (value !== undefined) ignored.country = value;
+  return "US";
+}
+
+function parseFlag(
+  value: string | undefined,
+  key: "offers" | "guide",
+  ignored: IgnoredOverrides,
+): boolean {
+  if (value !== undefined && value !== "on" && value !== "off") ignored[key] = value;
+  return value === "on";
+}
+
+function parseAssignments(
+  data: Overrides,
+  visitorId: string,
+  ignored: IgnoredOverrides,
+): Record<string, "control" | "treatment"> {
+  const assignments: Record<string, "control" | "treatment"> = {};
+  for (const experiment of experiments) {
+    const key = `exp.${experiment.id}`;
+    const override = data[key as keyof Overrides];
+    if (
+      override !== undefined &&
+      override !== "auto" &&
+      override !== "control" &&
+      override !== "treatment"
+    )
+      ignored[key] = override;
+    assignments[experiment.id] =
+      override === "control" || override === "treatment"
+        ? override
+        : assignVariant(visitorId, experiment.id);
+  }
+  return assignments;
+}
+
 export const getPageDecisions = createServerFn({ method: "GET" })
   .validator(overridesSchema)
   .handler(async ({ data }) => {
@@ -28,30 +70,10 @@ export const getPageDecisions = createServerFn({ method: "GET" })
       });
     }
     const ignored: Record<string, string> = {};
-    const country = data.country === "IN" || data.country === "US" ? data.country : "US";
-    if (data.country !== undefined && data.country !== "IN" && data.country !== "US")
-      ignored.country = data.country;
-    const offers = data.offers === "on" ? true : false;
-    if (data.offers !== undefined && data.offers !== "on" && data.offers !== "off")
-      ignored.offers = data.offers;
-    const guide = data.guide === "on";
-    if (data.guide !== undefined && data.guide !== "on" && data.guide !== "off")
-      ignored.guide = data.guide;
-    const assignments: Record<string, "control" | "treatment"> = {};
-    for (const experiment of experiments) {
-      const override = data[`exp.${experiment.id}` as keyof typeof data];
-      if (
-        override !== undefined &&
-        override !== "auto" &&
-        override !== "control" &&
-        override !== "treatment"
-      )
-        ignored[`exp.${experiment.id}`] = override;
-      assignments[experiment.id] =
-        override === "control" || override === "treatment"
-          ? override
-          : assignVariant(visitorId, experiment.id);
-    }
+    const country = parseCountry(data.country, ignored);
+    const offers = parseFlag(data.offers, "offers", ignored);
+    const guide = parseFlag(data.guide, "guide", ignored);
+    const assignments = parseAssignments(data, visitorId, ignored);
     return {
       ...resolveDecisions({
         context: {

@@ -20,6 +20,9 @@ importers:
       drizzle-orm:
         specifier: ^0.45.0
         version: 0.45.3(@types/better-sqlite3@7.6.13)(better-sqlite3@12.11.1)
+      neverthrow:
+        specifier: ^8.2.0
+        version: 8.2.0
       nitro:
         specifier: 3.0.260903-beta
         version: 3.0.260903-beta
@@ -2114,6 +2117,10 @@ packages:
 
   napi-build-utils@2.0.0:
     resolution: {integrity: sha512-GEbrYkbfF7MoNaoh2iGG84Mnf/WZfB0GdGEsM8wz7Expx/LlWf5U8t9nvJKXSp3qr5IsEbK04cBGhol/KwOsWA==}
+
+  neverthrow@8.2.0:
+    resolution: {integrity: sha512-kOCT/1MCPAxY5iUV3wytNFUMUolzuwd/VF/1KCx7kf6CutrOsTie+84zTGTpgQycjvfLdBBdvBvFLqFD2c0wkQ==}
+    engines: {node: '>=18'}
 
   nf3@0.3.24:
     resolution: {integrity: sha512-HxLK4bo+5jNsEETZp4w3tJblHOA9MCBY14IN9nZJJV8JDxt9yNIYxuBuLMjTAR5GFa3HL61+8VQDUrXv3/C8fw==}
@@ -4236,6 +4243,10 @@ snapshots:
   nanoid@3.3.19: {}
 
   napi-build-utils@2.0.0: {}
+
+  neverthrow@8.2.0:
+    optionalDependencies:
+      '@rollup/rollup-linux-x64-gnu': 4.63.5
 
   nf3@0.3.24: {}
 

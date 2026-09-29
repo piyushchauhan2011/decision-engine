@@ -26,6 +26,21 @@ function objectValue(value: unknown, description: string): Record<string, unknow
   return value as Record<string, unknown>;
 }
 
+function validateCountryRule(node: Record<string, unknown>): void {
+  if (node.field !== "visitor.country") {
+    throw new Error(`Unknown rule field: ${String(node.field)}`);
+  }
+  if (node.value !== "IN" && node.value !== "US") {
+    throw new Error(`Invalid visitor.country rule value: ${String(node.value)}`);
+  }
+}
+
+function validateFlagRule(node: Record<string, unknown>): void {
+  if (node.name !== "seasonal-offers" && node.name !== "planning-guide") {
+    throw new Error(`Unknown rule flag: ${String(node.name)}`);
+  }
+}
+
 export function validateRule(value: unknown): asserts value is Rule {
   const node = objectValue(value, "rule");
   switch (node.type) {
@@ -40,17 +55,10 @@ export function validateRule(value: unknown): asserts value is Rule {
       validateRule(node.rule);
       return;
     case "eq":
-      if (node.field !== "visitor.country") {
-        throw new Error(`Unknown rule field: ${String(node.field)}`);
-      }
-      if (node.value !== "IN" && node.value !== "US") {
-        throw new Error(`Invalid visitor.country rule value: ${String(node.value)}`);
-      }
+      validateCountryRule(node);
       return;
     case "flag":
-      if (node.name !== "seasonal-offers" && node.name !== "planning-guide") {
-        throw new Error(`Unknown rule flag: ${String(node.name)}`);
-      }
+      validateFlagRule(node);
       return;
     default:
       throw new Error(`Unknown rule node: ${String(node.type)}`);

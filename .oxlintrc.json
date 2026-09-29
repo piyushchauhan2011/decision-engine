@@ -1,0 +1,26 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "rules": {
+    "complexity": ["error", { "max": 12 }],
+    "max-lines-per-function": [
+      "error",
+      { "max": 90, "skipBlankLines": true, "skipComments": true }
+    ],
+    "max-classes-per-file": ["error", { "max": 1 }],
+    "max-depth": ["error", { "max": 3 }],
+    "max-params": ["error", { "max": 3 }],
+    "max-statements": ["error", { "max": 18 }]
+  },
+  "overrides": [
+    {
+      "files": ["tests/**/*.ts"],
+      "rules": {
+        "max-lines-per-function": [
+          "error",
+          { "max": 180, "skipBlankLines": true, "skipComments": true }
+        ],
+        "max-statements": ["error", { "max": 80 }]
+      }
+    }
+  ]
+}

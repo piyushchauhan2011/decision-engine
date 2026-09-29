@@ -15,10 +15,10 @@ export interface ResolveDecisionsInput {
   assignments: Readonly<Record<string, Variant | undefined>>;
 }
 
-export function resolveDecisions(
-  { context, assignments }: ResolveDecisionsInput,
-  registry: DecisionRegistry = decisionRegistry,
-): DecisionResult {
+function selectAssignments(
+  assignments: ResolveDecisionsInput["assignments"],
+  registry: DecisionRegistry,
+): Map<string, Variant> {
   if (assignments === null || typeof assignments !== "object" || Array.isArray(assignments)) {
     throw new Error("Invalid experiment assignments: expected an object");
   }
@@ -32,6 +32,14 @@ export function resolveDecisions(
     }
     selected.set(id, variant);
   }
+  return selected;
+}
+
+export function resolveDecisions(
+  { context, assignments }: ResolveDecisionsInput,
+  registry: DecisionRegistry = decisionRegistry,
+): DecisionResult {
+  const selected = selectAssignments(assignments, registry);
 
   const values: DecisionValues = { ...decisionDefaults };
   const provenance: Record<DecisionPath, DecisionProvenance> = {

@@ -49,6 +49,27 @@ function isDecisionPath(path: string): path is DecisionPath {
   return Object.prototype.hasOwnProperty.call(decisionDefaults, path);
 }
 
+const allowedPatchValues = {
+  "hero.layout": ["immersive", "split"],
+  "search.layout": ["overlay", "inline"],
+  "destinationCard.layout": ["image", "compact"],
+  "destinations.columns": ["three", "two"],
+  "offers.visible": "boolean",
+  "planningGuide.visible": "boolean",
+  "planningGuide.detail": ["brief", "expanded"],
+} as const satisfies {
+  [Path in DecisionPath]:
+    | readonly DecisionValues[Path][]
+    | (DecisionValues[Path] extends boolean ? "boolean" : never);
+};
+
+function isValidPatchValue(path: DecisionPath, value: unknown): boolean {
+  const allowed = allowedPatchValues[path];
+  return allowed === "boolean"
+    ? typeof value === "boolean"
+    : (allowed as readonly unknown[]).includes(value);
+}
+
 function checkPatch(owner: string, owns: ReadonlySet<DecisionPath>, patch: unknown): void {
   if (patch === null || typeof patch !== "object" || Array.isArray(patch)) {
     throw new Error(`Invalid patch for ${owner}: expected an object`);
@@ -56,28 +77,8 @@ function checkPatch(owner: string, owns: ReadonlySet<DecisionPath>, patch: unkno
   for (const [path, value] of Object.entries(patch)) {
     if (!isDecisionPath(path)) throw new Error(`Unknown decision path ${path} in ${owner}`);
     if (!owns.has(path)) throw new Error(`${owner} writes ${path} without owning it`);
-    switch (path) {
-      case "hero.layout":
-        if (value === "immersive" || value === "split") break;
-        throw new Error(`Invalid value for ${path} in ${owner}`);
-      case "search.layout":
-        if (value === "overlay" || value === "inline") break;
-        throw new Error(`Invalid value for ${path} in ${owner}`);
-      case "destinationCard.layout":
-        if (value === "image" || value === "compact") break;
-        throw new Error(`Invalid value for ${path} in ${owner}`);
-      case "destinations.columns":
-        if (value === "three" || value === "two") break;
-        throw new Error(`Invalid value for ${path} in ${owner}`);
-      case "offers.visible":
-        if (typeof value === "boolean") break;
-        throw new Error(`Invalid value for ${path} in ${owner}`);
-      case "planningGuide.visible":
-        if (typeof value === "boolean") break;
-        throw new Error(`Invalid value for ${path} in ${owner}`);
-      case "planningGuide.detail":
-        if (value === "brief" || value === "expanded") break;
-        throw new Error(`Invalid value for ${path} in ${owner}`);
+    if (!isValidPatchValue(path, value)) {
+      throw new Error(`Invalid value for ${path} in ${owner}`);
     }
   }
 }

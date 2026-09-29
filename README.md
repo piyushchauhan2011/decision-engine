@@ -14,6 +14,8 @@ pnpm dev --host 127.0.0.1
 
 Open http://127.0.0.1:3000/ or `/destinations`. `DB_FILE_NAME` optionally points to a different SQLite file (default `./local.db`); run `DB_FILE_NAME=./other.db pnpm db:setup` before using a new file. The app intentionally errors with a setup instruction if the catalog is absent or empty. Seeding upserts the seven places and three featured hotels without deleting unrelated records. Schema changes: `pnpm db:generate`, then `pnpm db:migrate`.
 
+`src/db/catalog.server.ts` returns `neverthrow` `Result` values: missing, unmigrated, or unseeded catalogs are `setup-required` errors; unexpected database failures are `query-failed` errors. An unknown destination slug is successful with an empty list, not a database failure. Start server functions turn catalog errors into thrown route errors so the page never silently renders fake data or serializes a `Result` instance. Decision registry/ownership violations remain thrown programming errors, not recoverable catalog outcomes.
+
 ```sh
 pnpm lint
 pnpm format:check
@@ -33,6 +35,8 @@ pnpm test:e2e                    # expects a pre-seeded local.db
 TypeScript 6 checks the app with `pnpm typecheck`. Oxlint checks TypeScript/JavaScript; Stylelint checks CSS against `stylelint-config-standard`; Oxfmt formats source, tests, configuration, and this README. `pnpm lint` runs both linters, and `pnpm format:check` checks formatting without writing. Generated `src/routeTree.gen.ts`, lockfile metadata, and the reference `CHATS.md` are excluded from formatting.
 
 `pnpm install` runs the Husky `prepare` script in a Git checkout. The pre-commit hook runs lint-staged: Oxfmt formats staged supported files, Oxlint checks staged TS/JS files, and Stylelint checks staged CSS. The workspace only permits native install scripts for `better-sqlite3` and `esbuild`.
+
+`.oxlintrc.json` adds production limits: cyclomatic complexity 12, 90 nonblank/noncomment lines per function, one class per file, block depth 3, three parameters, and 18 statements per function. Tests keep the same complexity/depth/parameter/class limits but allow 180 lines and 80 statements for linear browser journeys. Avoid splitting a coherent scenario solely to meet production function-size limits. The normal `pnpm lint` command and staged-file Oxlint hook both load this config.
 
 ## Decisions
 
